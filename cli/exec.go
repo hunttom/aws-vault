@@ -239,15 +239,18 @@ func execCredentialHelper(input ExecCommandInput, config *vault.Config, creds *c
 	ak := strings.TrimSpace(credentialData.AccessKeyID)
 	sk := strings.TrimSpace(credentialData.SecretAccessKey)
 	st := strings.TrimSpace(credentialData.SessionToken)
+	ex := strings.TrimSpace(credentialData.Expiration)
 
 	if runtime.GOOS == "windows" {
-		fmt.Printf("SET AWS_ACCESS_KEY_ID=%s", ak)
+		fmt.Printf("\nSET AWS_ACCESS_KEY_ID=%s", ak)
 		fmt.Printf("SET AWS_SECRET_ACCESS_KEY=%s", sk)
 		fmt.Printf("SET AWS_SESSION_TOKEN=%s", st)
+		fmt.Printf("\nExpiration: %s", ex)
 	} else {
-		fmt.Printf("export AWS_ACCESS_KEY_ID=%s\n", ak)
+		fmt.Printf("\nexport AWS_ACCESS_KEY_ID=%s\n", ak)
 		fmt.Printf("export AWS_SECRET_ACCESS_KEY=%s\n", sk)
 		fmt.Printf("export AWS_SESSION_TOKEN=%s\n", st)
+		fmt.Printf("\nExpiration: %s", ex)
 	}
 	return nil
 }
