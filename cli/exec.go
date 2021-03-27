@@ -1,7 +1,6 @@
 package cli
 
 import (
-	"encoding/json"
 	"fmt"
 	"log"
 	"os"
@@ -237,13 +236,19 @@ func execCredentialHelper(input ExecCommandInput, config *vault.Config, creds *c
 		credentialData.Expiration = iso8601.Format(credsExpiresAt)
 	}
 
-	json, err := json.Marshal(&credentialData)
-	if err != nil {
-		return fmt.Errorf("Error creating credential json: %w", err)
+	ak := strings.TrimSpace(credentialData.AccessKeyID)
+	sk := strings.TrimSpace(credentialData.SecretAccessKey)
+	st := strings.TrimSpace(credentialData.SessionToken)
+
+	if runtime.GOOS == "windows" {
+		fmt.Printf("SET AWS_ACCESS_KEY_ID=%s", ak)
+		fmt.Printf("SET AWS_SECRET_ACCESS_KEY=%s", sk)
+		fmt.Printf("SET AWS_SESSION_TOKEN=%s", st)
+	} else {
+		fmt.Printf("export AWS_ACCESS_KEY_ID=%s\n", ak)
+		fmt.Printf("export AWS_SECRET_ACCESS_KEY=%s\n", sk)
+		fmt.Printf("export AWS_SESSION_TOKEN=%s\n", st)
 	}
-
-	fmt.Print(string(json))
-
 	return nil
 }
 
